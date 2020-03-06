@@ -1,0 +1,92 @@
+package ex1;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
+
+public class parser_xml_ex1 {
+	// tag???? Á¤???? ??Á®?À´? ?Þ¼Òµ?
+
+	 // tag???? Á¤???? ??Á®?À´? ?Þ¼Òµ?
+	  private static String getTagValue(String tag, Element eElement) {
+          NodeList nlList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+          Node nValue = (Node) nlList.item(0);
+          if(nValue == null) 
+              return null;
+          return nValue.getNodeValue();
+      }
+
+      public static void main(String[] args) {
+            
+         String subway;
+         String url;
+         
+         try{
+        	   subway="?æ¼®";
+               
+               // parsing?? url ??Á¤(API Å° ?????Ø¼?)
+               String urlstr = "http://swopenapi.seoul.go.kr/api/subway/776e42555064696138394254534758/xml/firstLastTimetable/0/33/";
+               
+               url=urlstr+(URLEncoder.encode(subway, "UTF-8"));
+
+               DocumentBuilderFactory dbFactoty = DocumentBuilderFactory.newInstance();
+               DocumentBuilder dBuilder = dbFactoty.newDocumentBuilder();
+               Document doc = dBuilder.parse(url);
+
+               doc.getDocumentElement().normalize();
+               System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+               NodeList nList = doc.getElementsByTagName("row");
+               System.out.println("?Ä½??? ????Æ® ?? : "+ nList.getLength());
+               
+               for(int temp = 0; temp < nList.getLength(); temp++){
+                  Node nNode = nList.item(temp);
+                  if(nNode.getNodeType() == Node.ELEMENT_NODE){
+                     
+                     Element eElement = (Element) nNode;
+                     System.out.println("######################");
+                     
+                     System.out.println("???Ì¸?  : " + getTagValue("statnNm", eElement));
+                     System.out.println("È£??  : " + getTagValue("subwayNm", eElement));
+                     if(getTagValue("lastcarDiv", eElement).equals("1"))
+                     {
+                    	 System.out.println("Ã¹???Ô´Ï´?");
+                    	 System.out.println("???? ???ß½Ã°?  : " + getTagValue("weekendTranHour", eElement));
+                    	 System.out.println("?????? ???ß½Ã°?  : " + getTagValue("saturdayTranHour", eElement));
+                    	 System.out.println("???? ???ß½Ã°?  : " + getTagValue("holidayTranHour", eElement));
+                     }
+                     if(getTagValue("lastcarDiv", eElement).equals("2"))
+                     {
+                    	 System.out.println("?????Ô´Ï´?");
+                    	 System.out.println("???? ?????Ã°?  : " + getTagValue("weekendTranHour", eElement));
+                    	 System.out.println("?????? ?????Ã°?  : " + getTagValue("saturdayTranHour", eElement));
+                    	 System.out.println("???? ?????Ã°?  : " + getTagValue("holidayTranHour", eElement));
+                     }
+                     if(getTagValue("expressyn", eElement).equals("Y"))
+                     {
+                    	 System.out.println("???? ?????Ô´Ï´?.");
+                     }
+                     if(getTagValue("expressyn", eElement).equals("N"))
+                     {
+                    	 System.out.println("?Ï¹? ?????Ô´Ï´?.");
+                     }
+                    
+                     System.out.println("Á¾Á¡  : " + getTagValue("subwayename", eElement));
+                  }   // for end
+                  
+               }   // if en
+            
+         } catch (Exception e){   
+            e.printStackTrace();
+         }   // try~catch end
+      }   // main end
+
+}

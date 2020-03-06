@@ -1,0 +1,20 @@
+*{
+margin:0;
+padding:0;
+font-family:'나눔 고딕', 'NanumGothic', Gothic;
+}
+a{
+  text-decoration: none;
+}
+body{
+  width:1600px;
+  margin:auto;
+  background: #E6E6E6;
+}
+#PageWrapper{
+  background: #FFFFFF;
+  margin: 40px 0 40px 0;
+  padding: 10px 20px 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(100,100,100,0.3);
+}
