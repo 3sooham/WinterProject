@@ -1,0 +1,51 @@
+<!-- 로그인화면  -->
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>subway</title>
+    <style media="screen">
+    *{
+    margin:0;
+    padding:0;
+    font-family:'나눔 고딕', 'NanumGothic', Gothic;
+    }
+    a{
+      text-decoration: none;
+    }
+    body{
+      width:1600px;
+      margin:auto;
+      background: #E6E6E6;
+    }
+    #PageWrapper{
+      background: #FFFFFF;
+      margin: 40px 0 40px 0;
+      padding: 10px 20px 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px rgba(100,100,100,0.3);
+    }
+
+    </style>
+  </head>
+  <body>
+    <div id="PageWrapper">
+      <form action="login.php" name='reg' method="post">
+        <fieldset>
+          <legend>로그인</legend>
+          <table>
+            <tr>
+              <td> <label>아이디</label> </td>
+              <td> <input type="text" name="login_id" class="box" required> </td>
+            </tr>
+            <tr>
+              <td> <label>password</label> </td>
+              <td> <input type="password" name="login_pwd" class="box" required> </td>
+            </tr>
+          </table>
+          <input type="submit"  value="로그인">
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>
