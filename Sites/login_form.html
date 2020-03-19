@@ -14,16 +14,19 @@
       text-decoration: none;
     }
     body{
-      width:1600px;
-      margin:auto;
-      background-image: url('ugi.png');
+	     
+      background-image: url('chch_1.jpg');
+	  background-position: center-center;
 	  background-repeat: no-repeat;
-	  background-position:center center;
-    }
+	  background-size : cover;
+	 -webkit-background-size: cover;
+	   -moz-background-size: cover;
+	     -o-background-size: cover;
+	}
     #PageWrapper{
-      background: #FFFFFF;
-      margin: 40px 0 40px 0;
-      padding: 10px 20px 10px 20px;
+      background:rgba(255,255,255,0.7);
+      margin: 20% 30% 0% 30%;
+      padding: 0 0 0 0;
       border-radius: 5px;
       box-shadow: 0 2px 6px rgba(100,100,100,0.3);
     }
@@ -31,7 +34,7 @@
     </style>
   </head>
   <body>
-    <div id="PageWrapper">
+    <div  id="PageWrapper">
       <form action="login.php" name='reg' method="post">
         <fieldset>
           <legend>로그인</legend>
@@ -45,7 +48,7 @@
               <td> <input type="password" name="login_pwd" class="box" required> </td>
             </tr>
           </table>
-          <input type="submit"  value="로그인">
+          <input type="submit" value="로그인">
         </fieldset>
       </form>
     </div>

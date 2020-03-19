@@ -54,5 +54,5 @@
          alert("빈칸은 ID가 될 수 없다");
        }
 
-       ifrm1.location.href="./join_chk.php?m_id="+id;
+       ifrm1.location.href="~/Sites/join_chk.php?m_id="+id;
       }

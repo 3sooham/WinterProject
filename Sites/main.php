@@ -16,6 +16,7 @@
 <title>subway</title>
 <script src="js/javascript.js?ver=getTime()" charset="utf-8"></script>
 <script src = "http://code.jquery.com/jquery-1.12.1.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <style media="screen">
 *{
 margin:0;
@@ -28,10 +29,11 @@ a{
 body{
   width:1600px;
   margin:auto;
-  background: #E6E6E6;
+  background-image: url('autumn.jpg');
+  background-size: cover;
 }
 #PageWrapper{
-  background: #FFFFFF;
+  background: rgba(255,255,255,.7);
   margin: 40px 0 40px 0;
   padding: 10px 20px 10px 20px;
   border-radius: 5px;
@@ -41,6 +43,7 @@ body{
 .mainbutton{
   width:100%;
   height:100%;
+		 background-color:rgba(192,131,100,0.8);
 }
 table.list{
   color:#06425C;
@@ -118,68 +121,113 @@ th{
    <input type="submit" class="mainbutton" value="기업 맞춤 추천">
  </form><br>
 
- <form action="check_com.php" method="post">
-   <input type="hidden" id='a' name="com_num" >
-   <input type='hidden' name='login_id' value='<? echo $id?>'>
+<foram action= "check_com.php" method="post">
+  <input type="hidden" id = 'a' name = "com_num">
+  <input type="hidden" name= 'login_id' value='<? echo $id?>'>
 
- <table class="list">
+</form><br>
+<?
+$query = "select Station from Saved_staions where Member_id = '$id';";
+$result = mysqli_query($conn,$query);
+
+$diff = 0;
+$AreaName ="";
+
+while($row = mysqli_fetch_array($result))
+{
+  if($diff++ !=0)
+  {
+    $AreaName .=",";
+  }
+  $AreaName .="'".$row['Station']."'";
+}
+?>
+ <script>
+   var subway = new Array(<?=$AreaName?>);
+   var urlstr = "http://swopenapi.seoul.go.kr/api/subway/7862795572646961353765574d596a/json/realtimeStationArrival/0/24/";
+   var urls = urlstr.concat(encodeURI(subway[0]));
+
+     $(document).ready(function(){
+       updateData();
+     });
+
+     function updateData(){
+
+       $.ajax({
+       url : urls ,              //ajax로 ajax_xml.xml파일을 불러온다.
+       cache: false,                     //사용자캐시를 사용할 것인가.
+       dataType: "json",                  //서버로부터 받을 것으로 예상되는 데이터 타입.
+       success: function(data){          //ajax요청을 통해 반환되는 데이터 data.
+         showtable(data);
+       }
+     });
+     setTimeout("updateData()", 30000); // 15초 단위로 갱신 처리
+   }
+
+   function showtable(data) {
+         var div = document.getElementById('wrap');
+         var line;
+         console.log(data);
+         html = '<table>';
+         html += '<th>호선</th> <th>운행방면 </th> <th>열차 번호</th> <th>도착 시간</th> <th>다음 열차</th> <th>그 다음 열차</th> <th>열차 상황</th> </tr>';
+         for (var j = 0; j < data.realtimeArrivalList.length; j++){
+             if(data.realtimeArrivalList[j].subwayId == '1001')
+             {
+               line = 1;
+             }
+             if(data.realtimeArrivalList[j].subwayId == '1002')
+             {
+               line = 2;
+             }
+             if(data.realtimeArrivalList[j].subwayId == '1003')
+             {
+               line = 3;
+             }
+             if(data.realtimeArrivalList[j].subwayId == '1004')
+             {
+               line = 4;
+             }
+             if(data.realtimeArrivalList[j].subwayId == '1005')
+             {
+               line = 5;
+             }
+             if(data.realtimeArrivalList[j].subwayId == '1006')
+             {
+               line = 6;
+             }
+             if(data.realtimeArrivalList[j].subwayId == '1007')
+             {
+               line = 7;
+             }
+             if(data.realtimeArrivalList[j].subwayId == '1008')
+             {
+               line = 8;
+             }
+             if(data.realtimeArrivalList[j].subwayId == '1009')
+             {
+               line = 9;
+             }
+             html += '<tr><td>' + line + '</td><td>' + data.realtimeArrivalList[j].trainLineNm + '</td><td>' + data.realtimeArrivalList[j].btrainNo + '</td><td>' + data.realtimeArrivalList[j].recptnDt
+                     + '</td><td> ' + data.realtimeArrivalList[j].arvlMsg2 + '</td><td>' + data.realtimeArrivalList[j].arvlMsg3 + '</td><td> ' + data.realtimeArrivalList[j].arvlCd +  '</td></tr>';
+         }
+         html += '</table>';
+
+         div.innerHTML = html;
+     }
+
+ </script>
+</form>
+
+ <table class="list" id ="wrap">
  <tr>
-    <CENTER><?= $_POST['login_id']?> 님의 관심기업일정입니다 .</CENTER>
-   <th>기업명</th> <th>시작날짜</th> <th>종료날짜</th> <th>시작까지남은일자</th> <th>종료까지날짜일자</th> <th> 현재 지원가능 여부</th> <th>모의합격 여부</th>
+    <CENTER><?= $id ?> 님의 관심 역 정보입니다 .</CENTER>
  </tr>
  <br>
- <?
- while($row5 = mysqli_fetch_array($result5))
- {
- ?>
- <tr>
- <td><?echo $row5['기업명'] ?></td> <td><?echo $row5['시작날짜'] ?></td> <td><?echo $row5['종료날짜']?></td>
- <td> <?if(floor((strtotime($row5['시작날짜'])- strtotime($today))/86400)>0)
- {
-   echo abs(floor((strtotime($row5['시작날짜'])- strtotime($today))/86400))?>일 후
-<?
- }
- else {
-   echo abs(floor((strtotime($row5['시작날짜'])- strtotime($today))/86400))?>일 전
-<?
- }
- ?> </td>
- <td>
- <?if(floor((strtotime($row5['종료날짜']) - strtotime($today))/86400)>0)
- {
-  echo abs(floor((strtotime($row5['종료날짜']) - strtotime($today))/86400))?>일 후
-<?
- }
- else {
-   echo abs(floor((strtotime($row5['종료날짜']) - strtotime($today))/86400))?>일 전
-<?
- }
-?>
+
+
  </td>
- <td>
- <?
- if(floor((strtotime($row5['시작날짜'])- strtotime($today))/86400) < 0  and floor((strtotime($row5['종료날짜']) - strtotime($today))/86400)>0)
- {
-     echo "지원 가능";
- }
- else {
-     echo "지원 불가능";
- }
- ?>
- </td>
- <td>
- <input type="hidden" name="login_id" value="<?echo $id?>">
- <input type="submit"  value="모의지원" onclick="add_com_resume_num(<?echo $row5['기업번호']?>)">
- <script>
-   function add_com_resume_num(x){
-     document.getElementById('a').value=x;
-   }
- </script>
- </td>
+
  </tr>
-   <?
- }
- ?>
  </table>
 </form>
   <!-- 로그인 실패시 회원가입 화면으로 -->
@@ -194,13 +242,13 @@ th{
           <legend>회원가입</legend>
 
 
-              <label>아이디 : </label> <input type="text" name="m_id" id= 'chk_id1' required/>
+              <label>아이디&nbsp;&nbsp;&nbsp;&nbsp;: </label> <input type="text" name="m_id" id= 'chk_id1' required/>
               <input type="button" value="id_check" onclick="check_id()"> <br>
               <input type= "hidden" id ="chk_id2" name = chk_id2 value ="0">
 
            <label>비밀번호 : </label> <input type="password" name="m_pwd"  required/> <br>
 
-            <label>이름 : </label><input type="text" name="m_name"  required/> <br>
+            <label>이름<pre>&nbsp;</pre>: </label><input type="text" name="m_name"  required/> <br>
 
             <label>거주지: </label> <input type="text" name="m_addr" required placeholder="00시 00구 00ehd"> <br>
 
